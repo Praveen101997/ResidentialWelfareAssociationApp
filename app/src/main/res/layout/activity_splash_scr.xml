@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/background"
-    tools:context="com.example.chmarax.logregform.SplashScrActivity">
+    tools:context="com.vegabond.residentialwelfareassociation.registerandlogin.SplashScrActivity">
 
 
 
@@ -35,7 +35,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivLogoWhite"
         app:layout_constraintVertical_bias="0.012"
-        app:srcCompat="@drawable/chmara_tech_text" />
+        app:srcCompat="@drawable/app_text" />
 
     <ImageView
         android:id="@+id/ivLogoWhite"
@@ -54,4 +54,4 @@
         app:srcCompat="@drawable/logo_white" />
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

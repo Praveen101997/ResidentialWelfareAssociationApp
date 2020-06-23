@@ -15,7 +15,7 @@ import com.vegabond.residentialwelfareassociation.R;
 
 public class SplashScrActivity extends AppCompatActivity {
 
-    private ImageView logoSplash, chmaraTech, logoWhite;
+    private ImageView logoSplash, apps, logoWhite;
     private Animation anim1, anim2, anim3;
 
 
@@ -42,7 +42,7 @@ public class SplashScrActivity extends AppCompatActivity {
                 logoSplash.setVisibility(View.GONE);
 
                 logoWhite.startAnimation(anim3);
-                chmaraTech.startAnimation(anim3);
+                apps.startAnimation(anim3);
                 anim3.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
@@ -52,7 +52,7 @@ public class SplashScrActivity extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         logoWhite.setVisibility(View.VISIBLE);
-                        chmaraTech.setVisibility(View.VISIBLE);
+                        apps.setVisibility(View.VISIBLE);
 
                         finish();
                         startActivity(new Intent(SplashScrActivity.this,RegistrationActivity.class));
@@ -83,7 +83,7 @@ public class SplashScrActivity extends AppCompatActivity {
 
         logoSplash = findViewById(R.id.ivLogoSplash);
         logoWhite = findViewById(R.id.ivLogoWhite);
-        chmaraTech = findViewById(R.id.ivCHTtext);
+        apps = findViewById(R.id.ivCHTtext);
         anim1 = AnimationUtils.loadAnimation(getBaseContext(), R.anim.rotate);
         anim2 = AnimationUtils.loadAnimation(getBaseContext(), R.anim.fadeout);
         anim3 = AnimationUtils.loadAnimation(getBaseContext(), R.anim.fadein);
