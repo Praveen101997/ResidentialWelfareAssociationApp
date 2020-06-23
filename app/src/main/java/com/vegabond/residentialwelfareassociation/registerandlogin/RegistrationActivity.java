@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.vegabond.residentialwelfareassociation.MainActivity;
@@ -33,6 +34,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
+    private FirebaseUser user;
 
 
 
@@ -44,6 +46,13 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
 
         initializeGUI();
+
+        user = firebaseAuth.getCurrentUser();
+
+        if(user != null) {
+            finish();
+            startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+        }
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override

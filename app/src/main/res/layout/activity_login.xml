@@ -61,7 +61,7 @@
                 android:paddingEnd="10dp"
                 android:paddingStart="10dp"
                 android:textColor="@color/white"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/black"
                 android:textSize="15sp" />
 
 
@@ -79,7 +79,7 @@
                 android:paddingEnd="10dp"
                 android:paddingStart="10dp"
                 android:textColor="@color/white"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/black"
                 android:textSize="15sp" />
 
 
@@ -91,7 +91,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginBottom="3dp"
                 android:text="@string/forgot_password"
-                android:textColor="@color/gray" />
+                android:textColor="@color/black" />
 
 
             <Button
@@ -105,12 +105,22 @@
 
 
             <ImageView
-                android:id="@+id/ivFacebook"
+                android:id="@+id/ivGoogle"
                 android:layout_width="match_parent"
                 android:layout_height="51dp"
                 android:layout_marginTop="10dp"
                 android:contentDescription="Social site button"
-                android:src="@drawable/btn_twitter" />
+                android:src="@drawable/btn_google" />
+
+            <!--<com.google.android.gms.common.SignInButton-->
+                <!--android:id="@+id/google_button"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:text="Text"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:textSize="18sp" />-->
 
 
             <TextView
@@ -120,7 +130,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:text="@string/signup_redirect"
-                android:textColor="@color/gray" />
+                android:textColor="@color/black" />
 
 
         </LinearLayout>

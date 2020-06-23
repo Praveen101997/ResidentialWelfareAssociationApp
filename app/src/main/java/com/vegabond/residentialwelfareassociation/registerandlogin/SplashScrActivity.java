@@ -55,7 +55,7 @@ public class SplashScrActivity extends AppCompatActivity {
                         apps.setVisibility(View.VISIBLE);
 
                         finish();
-                        startActivity(new Intent(SplashScrActivity.this,RegistrationActivity.class));
+                        startActivity(new Intent(SplashScrActivity.this,LoginActivity.class));
                     }
 
                     @Override

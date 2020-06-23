@@ -1,8 +1,11 @@
 package com.vegabond.residentialwelfareassociation.registerandlogin;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -13,6 +16,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -23,13 +31,17 @@ import com.vegabond.residentialwelfareassociation.R;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private ImageView logo, ivSignIn, btnTwitter;
+    private ImageView logo, ivSignIn, btnGoogle;
     private AutoCompleteTextView email, password;
     private TextView forgotPass, signUp;
     private Button btnSignIn;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
     private ProgressDialog progressDialog;
+
+    public static GoogleSignInClient googleSignInClient;
+    private SharedPreferences mPreferences;
+    SharedPreferences.Editor preferencesEditor;
 
 
     @Override
@@ -38,12 +50,26 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         initializeGUI();
 
+        mPreferences = getSharedPreferences(
+                "googleAccount", MODE_PRIVATE);
+        preferencesEditor = mPreferences.edit();
+
         user = firebaseAuth.getCurrentUser();
 
         if(user != null) {
             finish();
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
         }
+
+
+        GoogleSignInAccount googleloggedAccount = GoogleSignIn.getLastSignedInAccount(this);
+
+        if (googleloggedAccount != null) {
+            Toast.makeText(this, "Already Logged In", Toast.LENGTH_SHORT).show();
+            onLoggedIn(googleloggedAccount);
+        }
+
+
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +102,50 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestIdToken()
+                .requestEmail()
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        btnGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent signInIntent = googleSignInClient.getSignInIntent();
+
+                startActivityForResult(signInIntent, 101);
+            }
+        });
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK)
+            switch (requestCode) {
+                case 101:
+                    try {
+                        // The Task returned from this call is always completed, no need to attach
+                        // a listener.
+                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                        GoogleSignInAccount account = task.getResult(ApiException.class);
+
+                        onLoggedIn(account);
+                    } catch (ApiException e) {
+                        // The ApiException status code indicates the detailed failure reason.
+                        Log.w("TAG", "signInResult:failed code=" + e.getStatusCode());
+                    }
+                    break;
+            }
+    }
+
+    private void onLoggedIn(GoogleSignInAccount googleSignInAccount) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("userGoogle", googleSignInAccount);
+
+        startActivity(intent);
+        finish();
     }
 
 
@@ -107,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
 
         logo = findViewById(R.id.ivLogLogo);
         ivSignIn = findViewById(R.id.ivSignIn);
-        btnTwitter = findViewById(R.id.ivFacebook);
+        btnGoogle = findViewById(R.id.ivGoogle);
         email = findViewById(R.id.atvEmailLog);
         password = findViewById(R.id.atvPasswordLog);
         forgotPass = findViewById(R.id.tvForgotPass);
