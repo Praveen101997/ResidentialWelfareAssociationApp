@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "647160763599",
+    "firebase_url": "https://residentialwelfareassociate.firebaseio.com",
+    "project_id": "residentialwelfareassociate",
+    "storage_bucket": "residentialwelfareassociate.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:647160763599:android:02e9d5ba01b8f993dd13ba",
+        "android_client_info": {
+          "package_name": "com.vegabond.residentialwelfareassociation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "647160763599-8gbqe26s7v4qhkaofgr2m9j7pibt7abq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vegabond.residentialwelfareassociation",
+            "certificate_hash": "af60f3fe6972497ef71e21cb0ed6e87becbcad73"
+          }
+        },
+        {
+          "client_id": "647160763599-6sldinop5ab8dpgdj8vmgp7eitjtsqbs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9tzIstCgezH7TUdEQWyf3RIA5AQKb3lY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "647160763599-6sldinop5ab8dpgdj8vmgp7eitjtsqbs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
