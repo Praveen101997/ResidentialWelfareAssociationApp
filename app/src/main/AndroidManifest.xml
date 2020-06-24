@@ -3,15 +3,32 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     package="com.vegabond.residentialwelfareassociation">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <dist:module dist:instant="true" />
 
     <application
+        android:windowSoftInputMode="adjustResize"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+
+
+        >
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+        <activity android:name=".registerandlogin.UserDetailEntry"></activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".registerandlogin.RegistrationActivity" />
         <activity android:name=".registerandlogin.SplashScrActivity">
@@ -22,7 +39,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".registerandlogin.LoginActivity" />
-        <activity android:name=".registerandlogin.PWresetActivity"></activity>
+        <activity android:name=".registerandlogin.PWresetActivity" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>
