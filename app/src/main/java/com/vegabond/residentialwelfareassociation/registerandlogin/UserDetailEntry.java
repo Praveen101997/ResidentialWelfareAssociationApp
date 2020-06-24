@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.FileUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -23,10 +24,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
+import com.vegabond.residentialwelfareassociation.MainActivity;
 import com.vegabond.residentialwelfareassociation.R;
 import com.yalantis.ucrop.UCrop;
 
@@ -54,6 +61,10 @@ public class UserDetailEntry extends AppCompatActivity {
 
     ArrayList<String> listResidence=new ArrayList<String>();
     ArrayList<String> listSociety=new ArrayList<String>();
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,11 +109,57 @@ public class UserDetailEntry extends AppCompatActivity {
         addToSpinner();
         adapterSociety();
 
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+        final GoogleSignInAccount googleSignInAccount = getIntent().getParcelableExtra("userGoogle");
+
+        if (user == null) {
+            email = googleSignInAccount.getEmail();
+        } else {
+            email = user.getEmail();
+        }
+
+        ATemailid.setText(email);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (user != null) {
+                    DatabaseReference UserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("regComplete");
+                    UserRef.setValue(true);
+                } else {
+                    DatabaseReference UserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(googleSignInAccount.getEmail().replace(".", "")).child("regComplete");
+                    UserRef.setValue(true);
+                }
+
+
+                String emailid = ATemailid.getText().toString();
+                String name = ATname.getText().toString();
+                String contactno = ATcontact.getText().toString();
+                String adultno = ATadult.getText().toString();
+                String childno = ATchild.getText().toString();
+                String flatno = ATflatno.getText().toString();
+                String ownername = ATownername.getText().toString();
+                int residencetypePos = ATresidenceType.getSelectedItemPosition();
+                String residencetype = listResidence.get(residencetypePos);
+                String societyname = ATsocietyName.getText().toString();
+
+                Log.d("Register", "Email :" + emailid + "\nName :" + name + "\nContact No" + contactno + "\nAdult No :" + adultno + "\nChild No :" + childno + "\nFlat No" + flatno + "\nOwner Name :" + ownername + "\nResidence Type :" + residencetype + "\nSocietyName :" + societyname);
+
+                Toast.makeText(getApplicationContext(), "Email :" + emailid + "\nName :" + name + "\nContact No" + contactno + "\nAdult No :" + adultno + "\nChild No :" + childno + "\nFlat No" + flatno + "\nOwner Name :" + ownername + "\nResidence Type :" + residencetype + "\nSocietyName :" + societyname, Toast.LENGTH_LONG).show();
+
+                startActivity(new Intent(UserDetailEntry.this, MainActivity.class));
+
+
+            }
+        });
+
     }
 
     public void addResidenceAndSociety(){
-        listResidence.add("Owner");
         listResidence.add("Tenant");
+        listResidence.add("Owner");
 
         listSociety.add("Society1");
         listSociety.add("Society2");
@@ -163,6 +220,7 @@ public class UserDetailEntry extends AppCompatActivity {
         ATsocietyName.setThreshold(2);
         ATownername = findViewById(R.id.up_OwnerName);
         LLOwner = findViewById(R.id.LLOwnerName);
+        button = findViewById(R.id.nextButton);
     }
 
 

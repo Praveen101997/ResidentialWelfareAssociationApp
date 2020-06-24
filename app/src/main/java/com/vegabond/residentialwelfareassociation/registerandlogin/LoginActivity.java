@@ -26,6 +26,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.vegabond.residentialwelfareassociation.MainActivity;
 import com.vegabond.residentialwelfareassociation.R;
 
@@ -144,13 +149,14 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("userGoogle", googleSignInAccount);
 
+        sendUserData(googleSignInAccount.getEmail(), "", false);
+
         startActivity(intent);
         finish();
     }
 
 
-
-    public void signUser(String email, String password){
+    public void signUser(final String email, final String password) {
 
         progressDialog.setMessage("Verificating...");
         progressDialog.show();
@@ -162,6 +168,8 @@ public class LoginActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this,"Login Successful",Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
+
+
                 }
                 else{
                     progressDialog.dismiss();
@@ -169,6 +177,35 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    private void sendUserData(String username, String password, Boolean regCompleteStatus) {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference users = firebaseDatabase.getReference("Users");
+        final UserProfile userP = new UserProfile(username, password, regCompleteStatus);
+        final String currentUserID = username.replace(".", "");
+
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.hasChild(currentUserID)) {
+                    // run some code
+                } else {
+                    users.child(currentUserID).setValue("");
+                    users.child(currentUserID).child("username").setValue(userP.getUsername());
+                    users.child(currentUserID).child("regComplete").setValue(userP.getRegComplete());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+//        users.push().setValue(user);
 
     }
 

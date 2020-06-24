@@ -93,7 +93,7 @@ public class RegistrationActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
-    private void registerUser(final String inputName, final String inputPw, String inputEmail) {
+    private void registerUser(final String inputName, final String inputPw, final String inputEmail) {
 
         progressDialog.setMessage("Verificating...");
         progressDialog.show();
@@ -104,7 +104,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         progressDialog.dismiss();
-                        sendUserData(inputName, inputPw);
+                        sendUserData(inputEmail, inputPw, false);
                         Toast.makeText(RegistrationActivity.this,"You've been registered successfully.",Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(RegistrationActivity.this, UserDetailEntry.class));
                     }
@@ -118,12 +118,16 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
 
-    private void sendUserData(String username, String password){
+    private void sendUserData(String username, String password, Boolean regCompleteStatus) {
 
+        String currentUserID = firebaseAuth.getCurrentUser().getUid();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference users = firebaseDatabase.getReference("users");
-        UserProfile user = new UserProfile(username, password);
-        users.push().setValue(user);
+        DatabaseReference users = firebaseDatabase.getReference("Users");
+        UserProfile userP = new UserProfile(username, password, regCompleteStatus);
+        users.child(currentUserID).setValue("");
+        users.child(currentUserID).child("username").setValue(userP.getUsername());
+        users.child(currentUserID).child("regComplete").setValue(userP.getRegComplete());
+//        users.push().setValue(user);
 
     }
 
