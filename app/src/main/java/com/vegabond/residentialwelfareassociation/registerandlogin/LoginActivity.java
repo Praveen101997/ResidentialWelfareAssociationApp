@@ -149,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("userGoogle", googleSignInAccount);
 
-        sendUserData(googleSignInAccount.getEmail(), "", false);
+        sendUserData(googleSignInAccount.getEmail(), "", true);
 
         startActivity(intent);
         finish();
@@ -180,29 +180,53 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void sendUserData(String username, String password, Boolean regCompleteStatus) {
+    private void sendUserData(String username, String password, final Boolean regCompleteStatus) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference users = firebaseDatabase.getReference("Users");
         final UserProfile userP = new UserProfile(username, password, regCompleteStatus);
         final String currentUserID = username.replace(".", "");
 
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
+        Log.d("check3","in");
+        users.child(currentUserID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.hasChild(currentUserID)) {
-                    // run some code
-                } else {
+                Log.d("check3","inside");
+                Log.d("check3","cc "+snapshot.exists());
+                if (!snapshot.exists()){
+                    Log.d("check3","if not exists");
                     users.child(currentUserID).setValue("");
                     users.child(currentUserID).child("username").setValue(userP.getUsername());
-                    users.child(currentUserID).child("regComplete").setValue(userP.getRegComplete());
+                    users.child(currentUserID).child("regComplete").setValue(false);
+                }else{
+                    Log.d("check3","if exists");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d("check3","Error "+error.getDetails()+"-+-"+error.getMessage());
             }
         });
+
+        Log.d("check3","out");
+
+//        users.child(currentUserID).setValue("");
+//        users.child(currentUserID).child("username").setValue(userP.getUsername());
+////        users.child(currentUserID).child("regComplete").setValue(0);
+//
+//        users.child(currentUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                if (!snapshot.child("regComplete").exists()){
+//                    users.child(currentUserID).child("regComplete").setValue(false);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
 
 //        users.push().setValue(user);

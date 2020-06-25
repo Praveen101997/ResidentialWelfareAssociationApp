@@ -63,13 +63,30 @@ public class MainActivity extends AppCompatActivity {
             UserRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String value = dataSnapshot.child("regComplete").getValue().toString();
-                    Log.d("check1", "value = " + value);
-                    if (value.equals("false")) {
-                        Intent intent = new Intent(MainActivity.this, UserDetailEntry.class);
-                        intent.putExtra("userGoogle", googleSignInAccount);
-                        startActivity(intent);
+                    if (dataSnapshot.child("regComplete").getValue()!=null){
+                        Log.d("check1", "if");
+                        String value = dataSnapshot.child("regComplete").getValue().toString();
+                        Log.d("check1", "value = " + value);
+                        if (value.equals("false")) {
+                            Intent intent = new Intent(MainActivity.this, UserDetailEntry.class);
+                            intent.putExtra("userGoogle", googleSignInAccount);
+                            startActivity(intent);
+                        }
+                    }else{
+                        Log.d("check1", "else");
+                        startActivity(new Intent(MainActivity.this,LoginActivity.class));
+//                        UserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(googleSignInAccount.getEmail().toString().replace(".", ""));
+//                        UserRef.child("regComplete").setValue(false);
+//                        String value = dataSnapshot.child("regComplete").getValue().toString();
+//                        Log.d("check1", "value = " + value);
+//                        if (value.equals("false")) {
+//                            Intent intent = new Intent(MainActivity.this, UserDetailEntry.class);
+//                            intent.putExtra("userGoogle", googleSignInAccount);
+//                            startActivity(intent);
+//                        }
                     }
+
+
                 }
 
                 @Override
