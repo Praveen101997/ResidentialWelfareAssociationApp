@@ -22,16 +22,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.vegabond.residentialwelfareassociation.apirequest.apiRegistration;
+import com.vegabond.residentialwelfareassociation.apirequest.variablesValues;
 import com.vegabond.residentialwelfareassociation.registerandlogin.LoginActivity;
 import com.vegabond.residentialwelfareassociation.registerandlogin.UserDetailEntry;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnLogout;
+    private Button btnLogout,btnGetData;
     private FirebaseAuth firebaseAuth;
-    private TextView emailandusername;
+    private TextView emailandusername,userData;
 
     private String email,uname;
+    public static String data;
     private FirebaseUser user;
     DatabaseReference UserRef;
 
@@ -42,8 +45,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         emailandusername = findViewById(R.id.textView);
+        userData = findViewById(R.id.tvdisplay);
 
         btnLogout = findViewById(R.id.btnLogout);
+        btnGetData = findViewById(R.id.btnGetData);
+
         firebaseAuth = FirebaseAuth.getInstance();
 
         user = firebaseAuth.getCurrentUser();
@@ -154,6 +160,18 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
+            }
+        });
+
+
+
+        //==========================================================================================
+        btnGetData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                apiRegistration api = new apiRegistration();
+                api.userdetailsget(email);
+                userData.setText(variablesValues.userData);
             }
         });
 

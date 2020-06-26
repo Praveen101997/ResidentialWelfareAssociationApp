@@ -35,13 +35,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.vegabond.residentialwelfareassociation.MainActivity;
 import com.vegabond.residentialwelfareassociation.R;
+import com.vegabond.residentialwelfareassociation.apirequest.apiRegistration;
 import com.yalantis.ucrop.UCrop;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -53,6 +61,8 @@ public class UserDetailEntry extends AppCompatActivity {
     TextView profileName;
     private ProgressDialog Loadingbar;
     private static final int GalleryPick = 1;
+
+
 
     private AutoCompleteTextView ATname,ATemailid,ATcontact,ATadult,ATchild,ATflatno,ATownername;
     private Spinner ATresidenceType;
@@ -149,13 +159,63 @@ public class UserDetailEntry extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), "Email :" + emailid + "\nName :" + name + "\nContact No" + contactno + "\nAdult No :" + adultno + "\nChild No :" + childno + "\nFlat No" + flatno + "\nOwner Name :" + ownername + "\nResidence Type :" + residencetype + "\nSocietyName :" + societyname, Toast.LENGTH_LONG).show();
 
+
+                String json = null;
+                try {
+                    json = jsonConvert(emailid,name,contactno,adultno,childno,flatno,societyname,residencetype,ownername);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("Check5","JSON - "+json);
+
+                apiRegistration api = new apiRegistration();
+
+
+                String res = "res";
+                try {
+                    res = api.userdetailspost("https://residenceassociation.herokuapp.com/UserProfiles",json);
+
+                } catch (IOException e) {
+                    Log.d("Check5","In catch - ");
+                    e.printStackTrace();
+                }
+                Log.d("Check5","Response - "+res);
                 startActivity(new Intent(UserDetailEntry.this, MainActivity.class));
-
-
             }
+
+
+
+
+
+
+
         });
 
     }
+
+    //==============================================================================================
+
+    public static String jsonConvert(String email,String name,String contact,String adult,String child,String flatno,String societyname,String residenttype,String ownername) throws JSONException {
+
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put("Email", email);
+        jsonObject.put("Name", name);
+        jsonObject.put("ContactNo", contact);
+        jsonObject.put("AdultCount", adult);
+        jsonObject.put("ChildCount", child);
+        jsonObject.put("FlatNo", flatno);
+        jsonObject.put("SocietyName", societyname);
+        jsonObject.put("ResidentType", residenttype);
+        jsonObject.put("OwnerName", ownername);
+
+        Log.d("check5","JSON STRING : "+jsonObject.toString());
+
+        return jsonObject.toString();
+    }
+
+
+    //==============================================================================================
 
     public void addResidenceAndSociety(){
         listResidence.add("Tenant");
